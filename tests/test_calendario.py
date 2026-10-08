@@ -37,3 +37,12 @@ def test_mudanca_de_horario_europa_e_recife():
         {"data": "2028-03-26", "de": "+01:00", "para": "+02:00"}
     ]
     assert mudancas_horario("America/Recife", date(2028, 1, 1), date(2028, 12, 31)) == []
+
+
+def test_periodo_longo_demais_nao_consulta(cliente_com):
+    cli, rot = cliente_com([("date.nager.at", [])])
+    with pytest.raises(ValueError, match="período longo demais"):
+        feriados(cli, "CZ", date(2028, 1, 1), date(2031, 1, 1))
+    with pytest.raises(ValueError, match="período longo demais"):
+        mudancas_horario("Europe/Prague", date(2028, 1, 1), date(2031, 1, 1))
+    assert rot.chamadas == []

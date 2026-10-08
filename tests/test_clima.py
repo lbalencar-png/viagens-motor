@@ -116,3 +116,10 @@ def test_live_lisboa_maio():
 
     dados, _ = clima(Cliente(), 38.72, -9.14, date(2028, 5, 10), date(2028, 5, 15))
     assert dados["tipo"] == "media_10_anos" and len(dados["dias"]) == 6
+
+
+def test_periodo_longo_demais_nao_consulta(cliente_com):
+    cli, rot = cliente_com([("open-meteo.com", {})])
+    with pytest.raises(ValueError, match="período longo demais"):
+        clima(cli, 48.85, 2.35, date(2028, 1, 1), date(2028, 6, 1), hoje=date(2026, 10, 7))
+    assert rot.chamadas == []

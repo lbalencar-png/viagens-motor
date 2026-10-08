@@ -13,6 +13,7 @@ FONTE = "Open-Meteo"
 DIARIO = "temperature_2m_max,temperature_2m_min,precipitation_sum"
 HORIZONTE = 15
 ATRASO_ARQUIVO = 6
+MAX_DIAS = 60  # período de viagem; a média de 10 anos faz 10 consultas por período
 
 
 def _no_ano(d: date, ano: int) -> date:
@@ -112,6 +113,8 @@ def clima(cli: Cliente, lat: float, lon: float, inicio: date, fim: date, hoje: d
     hoje = hoje or date.today()
     if fim < inicio:
         raise ValueError("fim antes do início")
+    if (fim - inicio).days + 1 > MAX_DIAS:
+        raise ValueError(f"período longo demais: até {MAX_DIAS} dias")
     if inicio < hoje:
         raise ValueError("período no passado: use datas de hoje em diante")
     corte = hoje + timedelta(days=HORIZONTE)

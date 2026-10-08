@@ -10,9 +10,18 @@ from .http import Cliente, rotulo
 NAGER = "https://date.nager.at/api/v3/PublicHolidays/{ano}/{pais}"
 FONTE = "Nager.Date"
 TTL = 365 * 86400
+MAX_DIAS = 731  # até 2 anos: evita disparar muitas consultas à fonte pública
+
+
+def _validar_periodo(inicio: date, fim: date) -> None:
+    if fim < inicio:
+        raise ValueError("fim antes do início")
+    if (fim - inicio).days + 1 > MAX_DIAS:
+        raise ValueError(f"período longo demais: até {MAX_DIAS} dias")
 
 
 def feriados(cli: Cliente, pais: str, inicio: date, fim: date, regiao: str | None = None) -> tuple[list[dict], str]:
+    _validar_periodo(inicio, fim)
     pais = pais.upper().strip()
     achados, fonte = [], FONTE
     for ano in range(inicio.year, fim.year + 1):
@@ -38,6 +47,7 @@ def _offset(fuso: ZoneInfo, d: date) -> str:
 
 
 def mudancas_horario(fuso: str, inicio: date, fim: date) -> list[dict]:
+    _validar_periodo(inicio, fim)
     z = ZoneInfo(fuso)
     mudancas = []
     anterior = _offset(z, inicio - timedelta(days=1))
