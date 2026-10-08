@@ -1,0 +1,22 @@
+# Copie para o caminho indicado em VIAGENS_MOTOR_CONFIG (ou ~/.config/viagens-motor/config.toml).
+origem_padrao = "São Paulo"
+# projeto_url substitui o endereço usado no User-Agent (padrão: o repositório oficial)
+projeto_url = ""
+google_chave_env = "GOOGLE_MAPS_API_KEY"
+
+[iof]
+# Decreto 6.306/2007, art. 15-B (redação do Decreto 12.499/2025): incisos VII, XX e XXI
+cartao = 0.035
+especie = 0.035
+conta_global = 0.035
+
+[conta_global]
+# spread = 0.01
+
+[cartoes.exemplo]
+nome = "Cartão de exemplo"
+spread = 0.05
+spread_verificar = true
+iof_devolvido = false
+ptax_dia_anterior = false
+fonte_spread = "contrato do cartão"
